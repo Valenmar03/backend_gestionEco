@@ -13,11 +13,6 @@ const ProductSchema: Schema = new Schema({
         required: true,
         trim: true,
     },
-    description: {
-        type: String, 
-        required: true,
-        trim: true,
-    },
     stock: {
         type: Number, 
         required: true,
