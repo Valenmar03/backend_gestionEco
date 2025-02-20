@@ -36,4 +36,39 @@ export class ProductController {
          console.log(error);
       }
    };
+
+   static updateProduct = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params
+         const product = await Product.findByIdAndUpdate(id, req.body);
+
+         if(!product){
+            const error = new Error("Producto no encontrado");
+            res.status(404).send({ status: "error", payload: error.message });
+            return
+         }
+         
+         await product.save();
+         res.send({ status: "success", message: "Producto actualizado correctamente" });
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   static deleteProduct = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params
+         const product = await Product.findByIdAndDelete(id);
+
+         if(!product){
+            const error = new Error("Producto no encontrado");
+            res.status(404).send({ status: "error", payload: error.message });
+            return
+         }
+         
+         res.send({ status: "success", message: "Producto eliminado correctamente" });
+      } catch (error) {
+         console.log(error);
+      }
+   };
 }
