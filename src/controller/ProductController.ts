@@ -8,7 +8,9 @@ export class ProductController {
       try {
          await product.save();
          res.send("Proyecto creado correctamente");
-      } catch (error) {}
+      } catch (error) {
+         console.log(error)
+      }
    };
 
    static getAllProducts = async (req: Request, res: Response) => {
@@ -22,15 +24,15 @@ export class ProductController {
 
    static getProductById = async (req: Request, res: Response) => {
       try {
-         const { id } = req.params
+         const { id } = req.params;
          const product = await Product.findById(id);
 
-         if(!product){
+         if (!product) {
             const error = new Error("Producto no encontrado");
             res.status(404).send({ status: "error", payload: error.message });
-            return
+            return;
          }
-         
+
          res.send({ status: "success", payload: product });
       } catch (error) {
          console.log(error);
@@ -39,17 +41,20 @@ export class ProductController {
 
    static updateProduct = async (req: Request, res: Response) => {
       try {
-         const { id } = req.params
+         const { id } = req.params;
          const product = await Product.findByIdAndUpdate(id, req.body);
 
-         if(!product){
+         if (!product) {
             const error = new Error("Producto no encontrado");
             res.status(404).send({ status: "error", payload: error.message });
-            return
+            return;
          }
-         
+
          await product.save();
-         res.send({ status: "success", message: "Producto actualizado correctamente" });
+         res.send({
+            status: "success",
+            message: "Producto actualizado correctamente",
+         });
       } catch (error) {
          console.log(error);
       }
@@ -57,16 +62,19 @@ export class ProductController {
 
    static deleteProduct = async (req: Request, res: Response) => {
       try {
-         const { id } = req.params
+         const { id } = req.params;
          const product = await Product.findByIdAndDelete(id);
 
-         if(!product){
+         if (!product) {
             const error = new Error("Producto no encontrado");
             res.status(404).send({ status: "error", payload: error.message });
-            return
+            return;
          }
-         
-         res.send({ status: "success", message: "Producto eliminado correctamente" });
+
+         res.send({
+            status: "success",
+            message: "Producto eliminado correctamente",
+         });
       } catch (error) {
          console.log(error);
       }
