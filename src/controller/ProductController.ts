@@ -23,8 +23,15 @@ export class ProductController {
    static getProductById = async (req: Request, res: Response) => {
       try {
          const { id } = req.params
-         const products = await Product.findById(id);
-         res.send({ status: "success", payload: products });
+         const product = await Product.findById(id);
+
+         if(!product){
+            const error = new Error("Producto no encontrado");
+            res.status(404).send({ status: "error", payload: error.message });
+            return
+         }
+         
+         res.send({ status: "success", payload: product });
       } catch (error) {
          console.log(error);
       }
