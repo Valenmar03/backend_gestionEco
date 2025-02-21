@@ -4,6 +4,11 @@ export type ProductType = Document & {
     productName: string;
     description: string;
     stock: number;
+    cost: number;
+    price: {
+        wholesalePrice: number;
+        retailPrice: number;
+    }
 }
 
 
@@ -18,6 +23,20 @@ const ProductSchema: Schema = new Schema({
         required: true,
         default: 0,
     },
+    cost: {
+        type: Number, 
+        required: true,
+    },
+    price: {
+        wholesalePrice: {
+            type: Number,
+            required: true
+        },
+        retailPrice: {
+            type: Number,
+            required: true
+        }
+    }
 })
 
 const Product = mongoose.model<ProductType>("Product", ProductSchema)

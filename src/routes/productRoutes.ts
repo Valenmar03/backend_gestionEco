@@ -10,6 +10,18 @@ router.post(
    body("productName")
       .notEmpty()
       .withMessage("Debe agregar un nombre de producto"),
+   body("cost")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un costo del producto"),
+   body("price.wholesalePrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio mayorista"),
+   body("price.retailPrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio minorista"),
    handleInputErrors,
    ProductController.createProduct
 );
@@ -29,6 +41,18 @@ router.put("/:id",
    body("productName")
       .notEmpty()
       .withMessage("Debe agregar un nombre de producto"),
+   body("cost")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un costo del producto"),
+   body("price.wholesalePrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio mayorista"),
+   body("price.retailPrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio minorista"),
    handleInputErrors,
    ProductController.updateProduct
 );
