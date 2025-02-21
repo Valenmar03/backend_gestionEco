@@ -7,7 +7,7 @@ export class ProductController {
 
       try {
          await product.save();
-         res.send("Proyecto creado correctamente");
+         res.send("Producto creado correctamente");
       } catch (error) {
          console.log(error)
       }

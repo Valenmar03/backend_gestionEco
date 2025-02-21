@@ -1,4 +1,4 @@
-import mongoose, {Schema, Document, ProjectionType} from "mongoose";
+import mongoose, {Schema, Document} from "mongoose";
 
 export type ProductType = Document & {
     productName: string;
