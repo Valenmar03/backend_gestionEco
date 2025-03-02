@@ -7,9 +7,16 @@ const router = Router();
 
 router.post(
    "/",
-   body("productName")
+   body("type")
       .notEmpty()
       .withMessage("Debe agregar un nombre de producto"),
+   body("haveWeight")
+      .notEmpty()
+      .withMessage("Debe agregar si el producto tiene peso o volumen "),
+   body("weight")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un pesaje del producto"),
    body("cost")
       .notEmpty()
       .isNumeric()
@@ -38,9 +45,16 @@ router.put("/:id",
    param("id")
       .isMongoId()
       .withMessage("El ID del producto no es válido"),
-   body("productName")
+      body("type")
       .notEmpty()
       .withMessage("Debe agregar un nombre de producto"),
+   body("haveWeight")
+      .notEmpty()
+      .withMessage("Debe agregar si el producto tiene peso o volumen "),
+   body("weight")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un pesaje del producto"),
    body("cost")
       .notEmpty()
       .isNumeric()

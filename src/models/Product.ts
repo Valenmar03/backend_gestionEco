@@ -1,8 +1,9 @@
 import mongoose, {Schema, Document} from "mongoose";
 
 export type ProductType = Document & {
-    productName: string;
-    description: string;
+    type: string;
+    haveWeight: boolean;
+    weight: number;
     stock: number;
     cost: number;
     price: {
@@ -13,10 +14,18 @@ export type ProductType = Document & {
 
 
 const ProductSchema: Schema = new Schema({
-    productName: {
+    type: {
         type: String, 
         required: true,
         trim: true,
+    },
+    haveWeight: {
+        type: Boolean, 
+        required: true,
+    },
+    weight: {
+        type: Number, 
+        required: true,
     },
     stock: {
         type: Number, 
