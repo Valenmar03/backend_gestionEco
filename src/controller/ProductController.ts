@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import Product, { ProductType } from "../models/Product";
+import Product from "../models/Product";
 
 export class ProductController {
    static createProduct = async (req: Request, res: Response) => {
@@ -16,7 +16,7 @@ export class ProductController {
    static getAllProducts = async (req: Request, res: Response) => {
       try {
          const products = await Product.find();
-         res.send({ status: "success", payload: products });
+         res.send(products);
       } catch (error) {
          console.log(error);
       }
