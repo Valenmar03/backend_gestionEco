@@ -79,4 +79,33 @@ export class ProductController {
          console.log(error);
       }
    };
+
+   static modifyStock = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params; 
+         const { stock } = req.body;
+
+        if (!stock || typeof stock !== "number") {
+            res.status(400).json({ error: "El stock debe ser un número válido." });
+            return
+        }
+        const product = await Product.findByIdAndUpdate(
+            id,
+            { $inc: { stock: stock } }, 
+            { new: true }
+        );
+         if (!product) {
+            const error = new Error("Producto no encontrado");
+            res.status(404).send({ status: "error", payload: error.message });
+            return;
+         }
+
+         res.send({
+            status: "success",
+            message: product,
+         });
+      } catch (error) {
+         console.log(error);
+      }
+   };
 }

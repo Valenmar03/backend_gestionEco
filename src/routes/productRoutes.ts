@@ -45,7 +45,7 @@ router.put("/:id",
    param("id")
       .isMongoId()
       .withMessage("El ID del producto no es válido"),
-      body("type")
+   body("type")
       .notEmpty()
       .withMessage("Debe agregar un nombre de producto"),
    body("haveWeight")
@@ -77,6 +77,18 @@ router.delete("/:id",
       .withMessage("El ID del producto no es válido"),
    handleInputErrors,
    ProductController.deleteProduct
+);
+
+router.put("/addStock/:id",
+   param("id")
+      .isMongoId()
+      .withMessage("El ID del producto no es válido"),
+   body("stock")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un numero de unidades de stock"),
+   handleInputErrors,
+   ProductController.modifyStock
 );
 
 export default router;
