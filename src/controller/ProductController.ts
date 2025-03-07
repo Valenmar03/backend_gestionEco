@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import Product, { ProductType } from "../models/Product";
+import Product from "../models/Product";
 
 export class ProductController {
    static createProduct = async (req: Request, res: Response) => {
@@ -9,7 +9,10 @@ export class ProductController {
          await product.save();
          res.send("Producto creado correctamente");
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al crear el producto",
+         });
       }
    };
 
@@ -18,7 +21,10 @@ export class ProductController {
          const products = await Product.find();
          res.send(products);
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al obtener el productos",
+         });
       }
    };
 
@@ -35,7 +41,10 @@ export class ProductController {
 
          res.send({ status: "success", payload: product });
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al obtener el producto",
+         });
       }
    };
 
@@ -56,7 +65,10 @@ export class ProductController {
             message: "Producto actualizado correctamente",
          });
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al actualizar el producto",
+         });
       }
    };
 
@@ -76,7 +88,10 @@ export class ProductController {
             message: "Producto eliminado correctamente",
          });
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al eliminar el producto",
+         });
       }
    };
 
