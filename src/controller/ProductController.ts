@@ -3,9 +3,17 @@ import Product from "../models/Product";
 
 export class ProductController {
    static createProduct = async (req: Request, res: Response) => {
-      const product = new Product(req.body);
-
       try {
+         const {type, weight} = req.body;
+   
+         const productExists = await Product.findOne({ type, weight })
+
+         if (productExists) {
+            res.status(400).send("Ya existe un producto con el mismo nombre y peso");
+            return
+         }
+
+         const product = new Product(req.body)
          await product.save();
          res.send("Producto creado correctamente");
       } catch (error) {
