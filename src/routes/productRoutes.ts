@@ -89,8 +89,7 @@ router.patch("/addStock",
       .withMessage("Cada objeto debe tener un 'id' válido"),
    body("*.stock")
       .isNumeric()
-      .custom(value => value >= 0)
-      .withMessage("Cada objeto debe tener un 'stock' numérico mayor o igual a 0"),
+      .withMessage("El stock debe ser un numero"),
    handleInputErrors,
    ProductController.modifyStock 
 )
