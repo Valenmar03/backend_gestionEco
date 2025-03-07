@@ -9,7 +9,7 @@ export class ProductController {
          await product.save();
          res.send("Producto creado correctamente");
       } catch (error) {
-         console.log(error)
+         console.log(error);
       }
    };
 
@@ -82,27 +82,20 @@ export class ProductController {
 
    static modifyStock = async (req: Request, res: Response) => {
       try {
-         const { id } = req.params; 
-         const { stock } = req.body;
+         const updates = req.body; // [{ id: '...', stock: 5 }, ...]
 
-        if (!stock || typeof stock !== "number") {
-            res.status(400).json({ error: "El stock debe ser un número válido." });
-            return
-        }
-        const product = await Product.findByIdAndUpdate(
-            id,
-            { $inc: { stock: stock } }, 
-            { new: true }
-        );
-         if (!product) {
-            const error = new Error("Producto no encontrado");
-            res.status(404).send({ status: "error", payload: error.message });
-            return;
-         }
+         const bulkOps = updates.map((product) => ({
+            updateOne: {
+               filter: { _id: product.id },
+               update: { $set: { stock: product.stock } },
+            },
+         }));
+
+         await Product.bulkWrite(bulkOps);
 
          res.send({
             status: "success",
-            message: product,
+            message: "Stock actualizado correctamente",
          });
       } catch (error) {
          console.log(error);

@@ -79,14 +79,17 @@ router.delete("/:id",
    ProductController.deleteProduct
 );
 
-router.put("/addStock/:id",
-   param("id")
+router.put("/addStock",
+   body().isArray()
+      .withMessage("Debe enviar un array de productos"),
+   body("*.id")
+      .notEmpty()
       .isMongoId()
-      .withMessage("El ID del producto no es válido"),
-   body("stock")
+      .withMessage("Debe enviar un ID de producto válido"),
+   body("*.stock")
       .notEmpty()
       .isNumeric()
-      .withMessage("Debe agregar un numero de unidades de stock"),
+      .withMessage("Debe enviar una cantidad válida"),
    handleInputErrors,
    ProductController.modifyStock
 );
