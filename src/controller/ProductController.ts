@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import Product from "../models/Product";
+import Product, { ProductType } from "../models/Product";
 
 export class ProductController {
    static createProduct = async (req: Request, res: Response) => {
@@ -82,12 +82,20 @@ export class ProductController {
 
    static modifyStock = async (req: Request, res: Response) => {
       try {
-         const updates = req.body; // [{ id: '...', stock: 5 }, ...]
+         const updates = req.body;
 
-         const bulkOps = updates.map((product) => ({
+         if (!Array.isArray(updates) || updates.length === 0) {
+            res.status(400).json({
+               status: "error",
+               message: "Debe enviar un array de productos válido",
+            });
+            return
+         }
+
+         const bulkOps = updates.map((product : { id: string, stock: number}) => ({
             updateOne: {
                filter: { _id: product.id },
-               update: { $set: { stock: product.stock } },
+               update: { $inc: { stock: product.stock } },
             },
          }));
 
@@ -98,7 +106,10 @@ export class ProductController {
             message: "Stock actualizado correctamente",
          });
       } catch (error) {
-         console.log(error);
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al actualizar el stock",
+         });
       }
    };
 }
