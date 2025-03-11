@@ -9,7 +9,8 @@ export class ProductController {
          const productExists = await Product.findOne({ type, weight })
 
          if (productExists) {
-            res.status(400).send("Ya existe un producto con el mismo nombre y peso");
+            const error = new Error("Ya existe un producto con el mismo nombre y peso")
+            res.status(400).send(error.message);
             return
          }
 
@@ -43,7 +44,7 @@ export class ProductController {
 
          if (!product) {
             const error = new Error("Producto no encontrado");
-            res.status(404).send({ status: "error", payload: error.message });
+            res.status(404).send(error.message);
             return;
          }
 
@@ -63,7 +64,7 @@ export class ProductController {
 
          if (!product) {
             const error = new Error("Producto no encontrado");
-            res.status(404).send({ status: "error", payload: error.message });
+            res.status(404).send(error.message);
             return;
          }
 
@@ -87,7 +88,7 @@ export class ProductController {
 
          if (!product) {
             const error = new Error("Producto no encontrado");
-            res.status(404).send({ status: "error", payload: error.message });
+            res.status(404).send(error.message);
             return;
          }
 
@@ -108,10 +109,8 @@ export class ProductController {
          const updates = req.body;
 
          if (!Array.isArray(updates) || updates.length === 0) {
-            res.status(400).json({
-               status: "error",
-               message: "Debe enviar un array de productos válido",
-            });
+            const error = new Error("Debe enviar un array de productos válido")
+            res.status(400).send(error.message);
             return
          }
 

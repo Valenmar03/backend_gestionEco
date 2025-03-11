@@ -28,4 +28,15 @@ router.post(
    AuthController.createAccount
 );
 
+router.post("/login", 
+   body("userName")
+      .notEmpty()
+      .withMessage("El nombre de usuario no puede ser vacio"),
+   body("password")
+      .notEmpty()
+      .withMessage("La contraseña no puede ser vacia"),
+   handleInputErrors,
+   AuthController.login
+)
+
 export default router;
