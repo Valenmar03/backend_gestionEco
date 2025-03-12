@@ -6,6 +6,8 @@ import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
+router.use(authenticate)
+
 router.post(
    "/",
    body("type")
@@ -33,7 +35,7 @@ router.post(
    handleInputErrors,
    ProductController.createProduct
 );
-router.get("/", authenticate, ProductController.getAllProducts);
+router.get("/", ProductController.getAllProducts);
 
 router.get("/:id",
    param("id")
