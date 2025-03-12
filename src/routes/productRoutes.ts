@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ProductController } from "../controller/ProductController";
 import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.post(
    handleInputErrors,
    ProductController.createProduct
 );
-router.get("/", ProductController.getAllProducts);
+router.get("/", authenticate, ProductController.getAllProducts);
 
 router.get("/:id",
    param("id")
