@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt'
 import User from "../models/User";
 import { checkPassword, hashPassword } from "../utils/auth";
+import { generateJWT } from "../utils/jwt";
 
 export class AuthController {
     static createAccount = async (req : Request, res : Response) => {
@@ -42,7 +43,11 @@ export class AuthController {
                 return
             }
 
-            res.send({status: 'success', message: 'Usuario Logueado correctamente'})
+            const token = generateJWT({
+                id: user.id
+            })
+
+            res.send({status: 'success', message: 'Usuario Logueado correctamente', token})
         } catch (error) {
             res.status(500).send({message: error})
         }
