@@ -34,7 +34,6 @@ export const authenticate = async (
             return;
          }
          req.user = user
-         console.log(req.user)
       }
    } catch (error) {
       res.status(500).send(error.message);
