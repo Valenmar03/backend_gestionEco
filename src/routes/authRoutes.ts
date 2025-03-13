@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AuthController } from "../controller/AuthController";
 import { body } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
@@ -37,6 +38,12 @@ router.post("/login",
       .withMessage("La contraseña no puede ser vacia"),
    handleInputErrors,
    AuthController.login
+)
+
+
+router.get("/user",
+   authenticate,
+   AuthController.user
 )
 
 export default router;
