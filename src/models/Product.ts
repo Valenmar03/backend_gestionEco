@@ -1,6 +1,6 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-export type ProductType = Document & {
+export interface IProduct extends Document {
     type: string;
     haveWeight: boolean;
     weight: number;
@@ -48,5 +48,5 @@ const ProductSchema: Schema = new Schema({
     }
 })
 
-const Product = mongoose.model<ProductType>("Product", ProductSchema)
+const Product = mongoose.model<IProduct>("Product", ProductSchema)
 export default Product
