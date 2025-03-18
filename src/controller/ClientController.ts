@@ -67,7 +67,29 @@ export class ClientController {
             return;
          }
 
+         
+         await client.save();
          res.send("Cliente actualizado correctamente");
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al actualizar al cliente",
+         });
+      }
+   };
+
+   static deleteClient = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params;
+         const client = await Client.findByIdAndDelete(id);
+
+         if (!client) {
+            const error = new Error("Cliente no encontrado");
+            res.status(404).send(error.message);
+            return;
+         }
+
+         res.send("Cliente eliminado correctamente");
       } catch (error) {
          res.status(500).json({
             status: "error",

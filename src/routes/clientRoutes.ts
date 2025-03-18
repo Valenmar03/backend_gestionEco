@@ -39,6 +39,9 @@ router.get("/:id",
 )
 
 router.put("/:id",
+   param("id")
+      .isMongoId()
+      .withMessage("El ID del producto no es válido"),
    body("name")
       .notEmpty()
       .isLength({ min: 4, max: 20 })
@@ -53,6 +56,14 @@ router.put("/:id",
       .withMessage("El cuil no deber venir vacio y debe tener al menos 10 caracteres"),
    handleInputErrors,
    ClientController.updateClient
+)
+
+router.delete("/:id",
+   param("id")
+      .isMongoId()
+      .withMessage("El ID del producto no es válido"),
+   handleInputErrors,
+   ClientController.deleteClient
 )
 
 export default router;
