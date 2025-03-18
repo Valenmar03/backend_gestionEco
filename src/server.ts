@@ -5,6 +5,7 @@ import { corsConfig } from "./config/cors";
 import { connectDB } from "./config/db";
 import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
+import clientRoutes from "./routes/clientRoutes"
 
 dotenv.config()
 
@@ -21,5 +22,7 @@ app.use(express.json())
 app.use('/api/products', productRoutes)
     //Auth
 app.use('/api/auth', authRoutes)
+    //Client
+app.use("/api/client", clientRoutes)
 
 export default app
