@@ -56,5 +56,24 @@ export class ClientController {
       }
    };
 
+   static updateClient = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params;
+         const client = await Client.findByIdAndUpdate(id, req.body);
+
+         if (!client) {
+            const error = new Error("Cliente no encontrado");
+            res.status(404).send(error.message);
+            return;
+         }
+
+         res.send("Cliente actualizado correctamente");
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al actualizar al cliente",
+         });
+      }
+   };
    
 }
