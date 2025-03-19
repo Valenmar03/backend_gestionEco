@@ -12,7 +12,7 @@ router.post(
    "/",
    body("name")
       .notEmpty()
-      .isLength({ min: 4, max: 20 })
+      .isLength({ min: 4})
       .withMessage("El nombre debe tener mas de 4 caracteres y menos de 20"),
    body("address").notEmpty().withMessage("La direccion no puede estar vacía"),
    body("phoneNumber")
@@ -44,7 +44,7 @@ router.put("/:id",
       .withMessage("El ID del producto no es válido"),
    body("name")
       .notEmpty()
-      .isLength({ min: 4, max: 20 })
+      .isLength({ min: 4 })
       .withMessage("El nombre debe tener mas de 4 caracteres y menos de 20"),
    body("address").notEmpty().withMessage("La direccion no puede estar vacía"),
    body("phoneNumber")
