@@ -60,13 +60,23 @@ export class ProductController {
    static updateProduct = async (req: Request, res: Response) => {
       try {
          const { id } = req.params;
-         const product = await Product.findByIdAndUpdate(id, req.body);
+         const { weight, type } = req.body;
 
+         const product = await Product.findById(id);
          if (!product) {
             const error = new Error("Producto no encontrado");
             res.status(404).send(error.message);
             return;
          }
+
+         const productExists = await Product.findOne({ type, weight })
+         if (productExists && productExists._id.toString() !== id) {
+            const error = new Error("Ya existe un producto con el mismo nombre y peso")
+            res.status(400).send(error.message);
+            return
+         }
+
+         await Product.updateOne({_id: id}, {$set: req.body})
 
          await product.save();
          res.send({
