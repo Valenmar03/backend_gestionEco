@@ -15,7 +15,7 @@ export class ClientController {
 
          const client = new Client(req.body);
          await client.save();
-         res.send("Cliente creado correctamente");
+         res.send({status: 'success', message:"Cliente creado correctamente"});
       } catch (error) {
          res.status(500).json({
             status: "error",
@@ -69,7 +69,7 @@ export class ClientController {
 
          
          await client.save();
-         res.send("Cliente actualizado correctamente");
+         res.send({status: 'success', message:"Cliente actualizado correctamente"});
       } catch (error) {
          res.status(500).json({
             status: "error",
@@ -89,7 +89,7 @@ export class ClientController {
             return;
          }
 
-         res.send("Cliente eliminado correctamente");
+         res.send({status: 'success', message:"Cliente eliminado correctamente"});
       } catch (error) {
          res.status(500).json({
             status: "error",
