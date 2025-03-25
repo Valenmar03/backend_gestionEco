@@ -17,6 +17,8 @@ export interface ISales extends Document {
         quantity: number;
         unitPrice: number;
     }[];
+    iva: boolean;
+    discount: number
     subtotal: number;
     total: number;
     type: TypeOfSale
