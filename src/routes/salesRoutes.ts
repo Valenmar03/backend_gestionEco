@@ -67,7 +67,7 @@ router.patch(
       .isIn(["wholesalePrice", "retailPrice", "MercadoLibrePrice"])
       .withMessage("Tipo de venta no válido"),
    handleInputErrors,
-   SalesController.updateSaleProducts
+   SalesController.updateSalePricings
 );
 
 export default router;

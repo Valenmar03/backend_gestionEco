@@ -207,4 +207,59 @@ export class SalesController {
          });
       }
    };
+
+   static updateSalePricings = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params;
+         const sale = await Sales.findById(id);
+         if (!sale) {
+            const error = new Error("Venta no encontrada");
+            res.status(404).send(error.message);
+            return;
+         }
+
+         const { iva, discount, type } = req.body;
+
+         let subtotal = type !== sale.type ? 0 : sale.subtotal;
+
+         if (type !== sale.type) {
+            const processedProducts = [];
+            for (const item of sale.products) {
+               const product = await Product.findById(item.product._id);
+               if (!product) {
+                  const error = new Error(
+                     "Error al procesar los productos. Producto no encontrado"
+                  );
+                  res.status(404).send(error.message);
+                  return;
+               }
+               processedProducts.push({
+                  product: product._id,
+                  unitPrice: product.price[type],
+                  quantity: item.quantity,
+               });
+            }
+            subtotal = processedProducts.reduce(
+               (acc, item) => acc + item.unitPrice * item.quantity,
+               0
+            );
+            sale.type = type;
+            sale.products = processedProducts;
+         }
+         const ivaAmount = iva ? subtotal * 0.21 : 0;
+         const discountAmount = (discount / 100) * subtotal;
+         const total = subtotal + ivaAmount - discountAmount;
+
+         sale.subtotal = subtotal;
+         sale.total = total;
+         await sale.save();
+
+         res.send("Venta actualizada correctamente");
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: error.message,
+         });
+      }
+   };
 }
