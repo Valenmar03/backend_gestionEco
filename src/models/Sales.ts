@@ -2,16 +2,24 @@ import mongoose, { Schema, Document, PopulatedDoc, Types} from "mongoose";
 import { IClient } from "./Client";
 import { IProduct } from "./Product";
 
+const typeOfSale = {
+    wholesalePrice: "wholesalePrice",
+    retailPrice: "retailPrice",
+    MercadoLibrePrice: "MercadoLibrePrice"
+}
+
+export type TypeOfSale = typeof typeOfSale[keyof typeof typeOfSale]
+
 export interface ISales extends Document {
     client: PopulatedDoc<IClient & Document>;
     products: {
         product: PopulatedDoc<IProduct & Document>;
         quantity: number;
+        unitPrice: number;
     }[];
     subtotal: number;
-    iva: boolean;
     total: number;
-    discount: number;
+    type: TypeOfSale
 }
 
 const salesSchema: Schema = new Schema({
@@ -26,6 +34,10 @@ const salesSchema: Schema = new Schema({
                 ref: "Product"
             },
             quantity: {
+                type: Number,
+                required: true
+            },
+            unitPrice: {
                 type: Number,
                 required: true
             }
@@ -46,8 +58,13 @@ const salesSchema: Schema = new Schema({
     discount: {
         type: Number,
         required: true
+    },
+    type: {
+        type: String,
+        enum: Object.values(typeOfSale),
+        required: true
     }
-})
+}, {timestamps: true})
 
 const Sales = mongoose.model<ISales>("Sales", salesSchema)
 export default Sales
