@@ -47,8 +47,8 @@ router.patch(
    "/:id/products",
    param("id").isMongoId().withMessage("El ID de la venta no es válido"),
    body("products")
-      .isArray()
-      .withMessage("El cuerpo de la solicitud debe ser un array"),
+      .isArray({ min: 1 })
+      .withMessage("Debe enviar al menos un producto"),
    body("products.*.productId").isMongoId().withMessage("Id no válido"),
    body("products.*.quantity")
       .isNumeric()
