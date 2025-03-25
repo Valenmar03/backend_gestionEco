@@ -6,6 +6,7 @@ import { connectDB } from "./config/db";
 import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
 import clientRoutes from "./routes/clientRoutes"
+import salesRoutes from "./routes/salesRoutes"
 
 dotenv.config()
 
@@ -24,5 +25,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/auth', authRoutes)
     //Client
 app.use("/api/client", clientRoutes)
+    //Sales
+app.use("/api/sales", salesRoutes)
 
 export default app
