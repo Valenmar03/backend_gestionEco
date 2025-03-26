@@ -262,4 +262,31 @@ export class SalesController {
          });
       }
    };
+
+   static deleteSale = async (req: Request, res: Response) => {
+      try {
+         const { id } = req.params;
+         const sale = await Sales.findByIdAndDelete(id);
+         if (!sale) {
+            const error = new Error("Venta no encontrada");
+            res.status(404).send(error.message);
+            return;
+         }
+
+         for (const item of sale.products){
+            const product = await Product.findById(item.product._id);
+            if (product) {
+               product.stock += item.quantity;
+               await product.save();
+            }
+         }
+
+         res.send("Venta eliminada correctamente");
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: error.message,
+         });
+      }
+   }
 }

@@ -70,4 +70,10 @@ router.patch(
    SalesController.updateSalePricings
 );
 
+router.delete("/:id",
+   param("id").isMongoId().withMessage("El ID de la venta no es válido"),
+   handleInputErrors,
+   SalesController.deleteSale
+)
+
 export default router;
