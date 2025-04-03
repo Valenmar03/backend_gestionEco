@@ -5,7 +5,7 @@ import { IProduct } from "./Product";
 const typeOfSale = {
     wholesalePrice: "wholesalePrice",
     retailPrice: "retailPrice",
-    MercadoLibrePrice: "MercadoLibrePrice"
+    mercadoLibrePrice: "mercadoLibrePrice"
 }
 
 export type TypeOfSale = typeof typeOfSale[keyof typeof typeOfSale]

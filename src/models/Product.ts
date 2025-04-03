@@ -9,6 +9,7 @@ export interface IProduct extends Document {
     price: {
         wholesalePrice: number;
         retailPrice: number;
+        mercadoLibrePrice: number;
     }
 }
 
@@ -42,6 +43,10 @@ const ProductSchema: Schema = new Schema({
             required: true
         },
         retailPrice: {
+            type: Number,
+            required: true
+        },
+        mercadoLibrePrice: {
             type: Number,
             required: true
         }

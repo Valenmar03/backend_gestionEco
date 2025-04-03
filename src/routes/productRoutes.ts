@@ -32,6 +32,10 @@ router.post(
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un precio minorista"),
+   body("price.mercadoLibrePrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio de Mercado Libre"),
    handleInputErrors,
    ProductController.createProduct
 );
@@ -70,6 +74,10 @@ router.put("/:id",
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un precio minorista"),
+   body("price.mercadoLibrePrice")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Debe agregar un precio de Mercado Libre"),
    handleInputErrors,
    ProductController.updateProduct
 );

@@ -20,7 +20,7 @@ router.post(
    body("type")
       .notEmpty()
       .withMessage("Debe agregar un tipo de venta")
-      .isIn(["wholesalePrice", "retailPrice", "MercadoLibrePrice"])
+      .isIn(["wholesalePrice", "retailPrice", "mercadoLibrePrice"])
       .withMessage("Tipo de venta no válido"),
    handleInputErrors,
    SalesController.createSale
@@ -64,7 +64,7 @@ router.patch(
    body("type")
       .notEmpty()
       .withMessage("Debe agregar un tipo de venta")
-      .isIn(["wholesalePrice", "retailPrice", "MercadoLibrePrice"])
+      .isIn(["wholesalePrice", "retailPrice", "mercadoLibrePrice"])
       .withMessage("Tipo de venta no válido"),
    handleInputErrors,
    SalesController.updateSalePricings
