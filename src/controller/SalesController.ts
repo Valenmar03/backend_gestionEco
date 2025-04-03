@@ -6,9 +6,9 @@ import Product from "../models/Product";
 export class SalesController {
    static createSale = async (req: Request, res: Response) => {
       try {
-         const { clientId, products, iva, discount, type } = req.body;
+         const { client, products, iva, discount, type } = req.body;
 
-         const client = await Client.findById(clientId);
+         const clientExists = await Client.findById(client);
          if (!client) {
             const error = new Error("Cliente no encontrado");
             res.status(404).send(error.message);
