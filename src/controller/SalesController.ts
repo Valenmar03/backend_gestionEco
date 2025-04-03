@@ -18,7 +18,7 @@ export class SalesController {
          const processedProducts = [];
 
          for (const item of products) {
-            const product = await Product.findById(item.productId);
+            const product = await Product.findById(item.product);
             if (!product) {
                const error = new Error(
                   "Error al procesar los productos. Producto no encontrado"
@@ -160,7 +160,7 @@ export class SalesController {
          const processedProducts = [];
 
          for (const item of products) {
-            const product = await Product.findById(item.productId);
+            const product = await Product.findById(item.product);
             if (!product) {
                const error = new Error(
                   "Error al procesar los productos. Producto no encontrado"

@@ -11,7 +11,7 @@ router.post(
    body("products")
       .isArray()
       .withMessage("El cuerpo de la solicitud debe ser un array"),
-   body("products.*.productId").isMongoId().withMessage("Id no válido"),
+   body("products.*.product").isMongoId().withMessage("Id no válido"),
    body("products.*.quantity")
       .isNumeric()
       .withMessage("La cantidad debe ser un número"),
