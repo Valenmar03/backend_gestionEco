@@ -9,7 +9,7 @@ export class SalesController {
          const { client, products, iva, discount, type } = req.body;
 
          const clientExists = await Client.findById(client);
-         if (!client) {
+         if (!clientExists) {
             const error = new Error("Cliente no encontrado");
             res.status(404).send(error.message);
             return;
@@ -54,7 +54,7 @@ export class SalesController {
          const total = subtotal + ivaAmount - discountAmount;
 
          const venta = new Sales({
-            client: client._id,
+            client: clientExists._id,
             products: processedProducts,
             type,
             subtotal,
@@ -118,15 +118,15 @@ export class SalesController {
             res.status(404).send(error.message);
             return;
          }
-         const { clientId } = req.body;
+         const { client } = req.body;
 
-         const client = await Client.findById(clientId);
-         if (!client) {
+         const clientExists = await Client.findById(client);
+         if (!clientExists) {
             const error = new Error("Cliente no encontrado");
             res.status(404).send(error.message);
             return;
          }
-         sale.client = client;
+         sale.client = clientExists;
 
          await sale.save();
          res.send("Venta actualizada correctamente");
