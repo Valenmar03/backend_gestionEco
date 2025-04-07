@@ -27,7 +27,8 @@ export class SalesController {
                return;
             }
             processedProducts.push({
-               product: product._id,
+               productId: product._id,
+               product: `${product.type} x ${product.weight}${product.haveWeight ? "Kg." : "mL."}`,
                unitPrice: product.price[type],
                quantity: item.quantity,
             });
@@ -149,7 +150,7 @@ export class SalesController {
          }
 
          for (const item of sale.products) {
-            const product = await Product.findById(item.product._id);
+            const product = await Product.findById(item.productId);
             if (product) {
                product.stock += item.quantity;
                await product.save();
@@ -160,7 +161,7 @@ export class SalesController {
          const processedProducts = [];
 
          for (const item of products) {
-            const product = await Product.findById(item.product);
+            const product = await Product.findById(item.productId);
             if (!product) {
                const error = new Error(
                   "Error al procesar los productos. Producto no encontrado"
@@ -225,7 +226,7 @@ export class SalesController {
          if (type !== sale.type) {
             const processedProducts = [];
             for (const item of sale.products) {
-               const product = await Product.findById(item.product._id);
+               const product = await Product.findById(item.productId);
                if (!product) {
                   const error = new Error(
                      "Error al procesar los productos. Producto no encontrado"
@@ -274,7 +275,7 @@ export class SalesController {
          }
 
          for (const item of sale.products){
-            const product = await Product.findById(item.product._id);
+            const product = await Product.findById(item.productId);
             if (product) {
                product.stock += item.quantity;
                await product.save();

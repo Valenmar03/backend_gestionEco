@@ -13,7 +13,8 @@ export type TypeOfSale = typeof typeOfSale[keyof typeof typeOfSale]
 export interface ISales extends Document {
     client: PopulatedDoc<IClient & Document>;
     products: {
-        product: PopulatedDoc<IProduct & Document>;
+        productId: PopulatedDoc<IProduct & Document>;
+        product: string
         quantity: number;
         unitPrice: number;
     }[];
@@ -31,9 +32,13 @@ const salesSchema: Schema = new Schema({
     },
     products: [ 
         {
-            product: {
+            productId: {
                 type: Types.ObjectId,
                 ref: "Product"
+            },
+            product: {
+                type: String,
+                required: true  
             },
             quantity: {
                 type: Number,
