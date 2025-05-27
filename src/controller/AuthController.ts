@@ -9,7 +9,9 @@ export class AuthController {
         try {
             const user = new User(req.body)
 
-            const userExists = User.findOne({userName: req.body.userName})
+            const userExists = await User.findOne({userName: req.body.userName})
+
+            console.log(userExists)
 
             if(userExists){
                 const error  = new Error("Ya hay un usuario registrado con este nombre de usuario");
