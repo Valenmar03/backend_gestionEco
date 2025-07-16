@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import Sales from "../models/Sales";
-import Client from "../models/Client";
+import Client, { IClient } from "../models/Client";
 import Product from "../models/Product";
+import { Document, PopulatedDoc } from "mongoose";
 
 export class SalesController {
    static createSale = async (req: Request, res: Response) => {
@@ -54,8 +55,13 @@ export class SalesController {
          const discountAmount = (discount / 100) * subtotal;
          const total = subtotal + ivaAmount - discountAmount;
 
+         const formatedClient = {
+            clientId: clientExists._id,
+            name: clientExists.name
+         }
+
          const venta = new Sales({
-            client: clientExists._id,
+            client: formatedClient,
             products: processedProducts,
             type,
             subtotal,
@@ -127,7 +133,13 @@ export class SalesController {
             res.status(404).send(error.message);
             return;
          }
-         sale.client = clientExists;
+
+         const formatedClient = {
+            clientId: clientExists._id as PopulatedDoc<IClient & Document>,
+            name: clientExists.name
+         }
+
+         sale.client = formatedClient;
 
          await sale.save();
          res.send("Venta actualizada correctamente");
