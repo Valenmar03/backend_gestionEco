@@ -107,7 +107,7 @@ export class SalesController {
             return;
          }
 
-         res.send({ status: "success", payload: sale });
+         res.send(sale);
       } catch (error) {
          res.status(500).json({
             status: "error",
