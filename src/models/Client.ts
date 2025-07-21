@@ -5,6 +5,9 @@ export interface IClient extends Document {
     address: string
     phoneNumber: string
     cuil: string
+    cp: number
+    province: string
+    city: string
 }
 
 const ClientSchema: Schema = new Schema({
@@ -26,6 +29,18 @@ const ClientSchema: Schema = new Schema({
         type: String,
         required: true, 
         trim: true
+    },
+    cp: {
+        type: Number,
+        required: false
+    },
+    province: {
+        type: String,
+        required: false
+    },
+    city: {
+        type: String,
+        required: false
     }
 })
 
