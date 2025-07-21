@@ -14,6 +14,12 @@ export interface ISales extends Document {
    client: {
       clientId: PopulatedDoc<IClient & Document>;
       name: string;
+      phoneNumber: string;
+      address: string;
+      cuil: string;
+      cp: number;
+      province: string;
+      city: string;
    };
    products: {
       productId: PopulatedDoc<IProduct & Document>;
@@ -38,6 +44,32 @@ const salesSchema: Schema = new Schema(
          name: {
             type: String,
             required: true,
+         },
+         address: {
+            type: String,
+            required: true,
+            trim: true,
+         },
+         phoneNumber: {
+            type: String,
+            required: true,
+         },
+         cuil: {
+            type: String,
+            required: true,
+            trim: true,
+         },
+         cp: {
+            type: Number,
+            required: false,
+         },
+         province: {
+            type: String,
+            required: false,
+         },
+         city: {
+            type: String,
+            required: false,
          },
       },
       products: [

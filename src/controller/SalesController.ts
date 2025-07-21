@@ -57,7 +57,13 @@ export class SalesController {
 
          const formatedClient = {
             clientId: clientExists._id,
-            name: clientExists.name
+            name: clientExists.name,
+            phoneNumber: clientExists.phoneNumber,
+            address: clientExists.address,
+            cuil: clientExists.cuil,
+            cp: clientExists.cp,
+            province: clientExists.province,
+            city: clientExists.city
          }
 
          const venta = new Sales({
@@ -136,7 +142,13 @@ export class SalesController {
 
          const formatedClient = {
             clientId: clientExists._id as PopulatedDoc<IClient & Document>,
-            name: clientExists.name
+            name: clientExists.name,
+            phoneNumber: clientExists.phoneNumber,
+            address: clientExists.address,
+            cuil: clientExists.cuil,
+            cp: clientExists.cp,
+            province: clientExists.province,
+            city: clientExists.city
          }
 
          sale.client = formatedClient;
