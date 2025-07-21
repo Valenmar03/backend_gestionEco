@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
    "/",
-   body("client").isMongoId().withMessage("Id no válido"),
+   body("client._id").isMongoId().withMessage("Id no válido"),
    body("products")
       .isArray()
       .withMessage("El cuerpo de la solicitud debe ser un array"),
