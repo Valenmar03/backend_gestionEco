@@ -35,6 +35,18 @@ router.get(
    SalesController.getSaleById
 );
 
+router.post(
+   "/by-month",
+   body("month")
+      .isInt({ min: 1, max: 12 })
+      .withMessage("El mes debe estar entre 1 y 12"),
+   body("year")
+      .isInt({ min: 2000 }) // Podés ajustar el mínimo si querés
+      .withMessage("Debe ingresar un año válido"),
+   handleInputErrors,
+   SalesController.getSalesByMonth
+);
+
 router.patch(
    "/:id/client",
    param("id").isMongoId().withMessage("El ID de la venta no es válido"),

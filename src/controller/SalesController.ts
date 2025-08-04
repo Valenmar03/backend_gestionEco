@@ -29,7 +29,9 @@ export class SalesController {
             }
             processedProducts.push({
                productId: product._id,
-               product: `${product.type} x ${product.weight}${product.haveWeight ? "Kg." : "mL."}`,
+               product: `${product.type} x ${product.weight}${
+                  product.haveWeight ? "Kg." : "mL."
+               }`,
                unitPrice: product.price[type],
                quantity: item.quantity,
             });
@@ -63,8 +65,8 @@ export class SalesController {
             cuil: clientExists.cuil,
             cp: clientExists.cp,
             province: clientExists.province,
-            city: clientExists.city
-         }
+            city: clientExists.city,
+         };
 
          const venta = new Sales({
             client: formatedClient,
@@ -122,6 +124,32 @@ export class SalesController {
       }
    };
 
+   static getSalesByMonth = async (req: Request, res: Response) => {
+      try {
+         const { month, year } = req.body;
+
+         if (!month || !year) {
+            return;
+         }
+
+         const startDate = new Date(year, month - 1, 1); // Ej: 2025, 0 = Enero
+         const endDate = new Date(year, month, 1); // Primer día del mes siguiente
+
+         const sales = await Sales.find({
+            createdAt: { $gte: startDate, $lt: endDate },
+         })
+            .populate("client")
+            .populate("products.product");
+
+         res.send(sales);
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: "Hubo un error al obtener las ventas por mes",
+         });
+      }
+   };
+
    static updateSaleClient = async (req: Request, res: Response) => {
       try {
          const { id } = req.params;
@@ -148,8 +176,8 @@ export class SalesController {
             cuil: clientExists.cuil,
             cp: clientExists.cp,
             province: clientExists.province,
-            city: clientExists.city
-         }
+            city: clientExists.city,
+         };
 
          sale.client = formatedClient;
 
@@ -298,7 +326,7 @@ export class SalesController {
             return;
          }
 
-         for (const item of sale.products){
+         for (const item of sale.products) {
             const product = await Product.findById(item.productId);
             if (product) {
                product.stock += item.quantity;
@@ -313,5 +341,5 @@ export class SalesController {
             message: error.message,
          });
       }
-   }
+   };
 }
