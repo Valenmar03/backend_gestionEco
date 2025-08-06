@@ -6,7 +6,7 @@ export interface IProduct extends Document {
     weight: number;
     stock: number;
     cost: number;
-    price: {
+    revenuePercentage: {
         wholesalePrice: number;
         retailPrice: number;
         mercadoLibrePrice: number;
@@ -37,16 +37,16 @@ const ProductSchema: Schema = new Schema({
         type: Number, 
         required: true,
     },
-    price: {
-        wholesalePrice: {
+    revenuePercentage: {
+        wholesale: {
             type: Number,
             required: true
         },
-        retailPrice: {
+        retail: {
             type: Number,
             required: true
         },
-        mercadoLibrePrice: {
+        mercadoLibre: {
             type: Number,
             required: true
         }

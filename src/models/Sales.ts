@@ -3,9 +3,9 @@ import { IClient } from "./Client";
 import { IProduct } from "./Product";
 
 const typeOfSale = {
-   wholesalePrice: "wholesalePrice",
-   retailPrice: "retailPrice",
-   mercadoLibrePrice: "mercadoLibrePrice",
+   wholesale: "wholesale",
+   retail: "retail",
+   mercadoLibre: "mercadoLibre",
 };
 
 export type TypeOfSale = (typeof typeOfSale)[keyof typeof typeOfSale];
@@ -90,6 +90,10 @@ const salesSchema: Schema = new Schema(
                type: Number,
                required: true,
             },
+            cost: {
+               type: Number,
+               required: true
+            }
          },
       ],
       subtotal: {

@@ -24,18 +24,18 @@ router.post(
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un costo del producto"),
-   body("price.wholesalePrice")
+   body("revenuePercentage.wholesale")
       .notEmpty()
       .isNumeric()
-      .withMessage("Debe agregar un precio mayorista"),
-   body("price.retailPrice")
+      .withMessage("Debe agregar un porcentaje de ganancia mayorista"),
+   body("revenuePercentage.retail")
       .notEmpty()
       .isNumeric()
-      .withMessage("Debe agregar un precio minorista"),
-   body("price.mercadoLibrePrice")
+      .withMessage("Debe agregar un porcentaje de ganancia minorista"),
+   body("revenuePercentage.mercadoLibre")
       .notEmpty()
       .isNumeric()
-      .withMessage("Debe agregar un precio de Mercado Libre"),
+      .withMessage("Debe agregar un porcentaje de ganancia de Mercado Libre"),
    handleInputErrors,
    ProductController.createProduct
 );

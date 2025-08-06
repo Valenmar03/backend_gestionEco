@@ -20,7 +20,7 @@ export class ProductController {
       } catch (error) {
          res.status(500).json({
             status: "error",
-            message: "Hubo un error al crear el producto",
+            message: error,
          });
       }
    };

@@ -32,8 +32,9 @@ export class SalesController {
                product: `${product.type} x ${product.weight}${
                   product.haveWeight ? "Kg." : "mL."
                }`,
-               unitPrice: product.price[type],
+               unitPrice: product.cost + (product.cost * product.revenuePercentage[type]),
                quantity: item.quantity,
+               cost: product.cost
             });
 
             product.stock -= item.quantity;
@@ -125,29 +126,17 @@ export class SalesController {
    };
 
    static getSalesByMonth = async (req: Request, res: Response) => {
-      try {
-         const { month, year } = req.body;
+      const { month } = req.params; // formato "2025-08"
+      const start = new Date(`${month}-01T00:00:00`);
+      const end = new Date(`${month}-31T23:59:59`);
 
-         if (!month || !year) {
-            return;
-         }
+      const sales = await Sales.find({
+         date: { $gte: start, $lte: end },
+      });
 
-         const startDate = new Date(year, month - 1, 1); // Ej: 2025, 0 = Enero
-         const endDate = new Date(year, month, 1); // Primer día del mes siguiente
+      const totalIngresos = sales.reduce((acc, s) => acc + s.total, 0);
 
-         const sales = await Sales.find({
-            createdAt: { $gte: startDate, $lt: endDate },
-         })
-            .populate("client")
-            .populate("products.product");
-
-         res.send(sales);
-      } catch (error) {
-         res.status(500).json({
-            status: "error",
-            message: "Hubo un error al obtener las ventas por mes",
-         });
-      }
+      res.json({ sales, totalIngresos });
    };
 
    static updateSaleClient = async (req: Request, res: Response) => {
@@ -223,8 +212,9 @@ export class SalesController {
             }
             processedProducts.push({
                product: product._id,
-               unitPrice: product.price[sale.type],
+               unitPrice: product.cost + ( product.cost * product.revenuePercentage[sale.type]),
                quantity: item.quantity,
+               cost: product.cost
             });
             product.stock -= item.quantity;
             if (product.stock < 0) {
@@ -288,8 +278,9 @@ export class SalesController {
                }
                processedProducts.push({
                   product: product._id,
-                  unitPrice: product.price[type],
+                  unitPrice: product.cost * (product.cost * product.revenuePercentage[type]),
                   quantity: item.quantity,
+                  cost: product.cost
                });
             }
             subtotal = processedProducts.reduce(
