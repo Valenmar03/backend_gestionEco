@@ -66,15 +66,15 @@ router.put("/:id",
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un costo del producto"),
-   body("price.wholesalePrice")
+   body("revenuePercentage.wholesale")
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un precio mayorista"),
-   body("price.retailPrice")
+   body("revenuePercentage.retail")
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un precio minorista"),
-   body("price.mercadoLibrePrice")
+   body("revenuePercentage.mercadoLibre")
       .notEmpty()
       .isNumeric()
       .withMessage("Debe agregar un precio de Mercado Libre"),
