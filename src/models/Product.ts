@@ -7,9 +7,9 @@ export interface IProduct extends Document {
     stock: number;
     cost: number;
     revenuePercentage: {
-        wholesalePrice: number;
-        retailPrice: number;
-        mercadoLibrePrice: number;
+        wholesale: number;
+        retail: number;
+        mercadoLibre: number;
     }
 }
 
