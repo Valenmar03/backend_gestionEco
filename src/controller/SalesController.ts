@@ -5,6 +5,14 @@ import Product from "../models/Product";
 import { Document, PopulatedDoc } from "mongoose";
 
 export class SalesController {
+   static monthRange = (month: string) => {
+      // month = "YYYY-MM"
+      const [y, m] = month.split("-").map(Number);
+      const start = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0));
+      const end = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999)); // último día del mes
+      return { start, end };
+   };
+
    static createSale = async (req: Request, res: Response) => {
       try {
          const { client, products, iva, discount, type } = req.body;
@@ -32,9 +40,10 @@ export class SalesController {
                product: `${product.type} x ${product.weight}${
                   product.haveWeight ? "Kg." : "mL."
                }`,
-               unitPrice: product.cost + (product.cost * product.revenuePercentage[type]),
+               unitPrice:
+                  product.cost + product.cost * product.revenuePercentage[type],
                quantity: item.quantity,
-               cost: product.cost
+               cost: product.cost,
             });
 
             product.stock -= item.quantity;
@@ -91,9 +100,20 @@ export class SalesController {
 
    static getAllSales = async (req: Request, res: Response) => {
       try {
-         const sales = await Sales.find()
+         const { month } = req.query as { month?: string };
+         let filter: any = {};
+         if (month) {
+            const { start, end } = SalesController.monthRange(month);
+            filter.createdAt = { $gte: start, $lte: end };
+         }
+         const sales = await Sales.find(filter)
+            .sort({
+               date: -1,
+               createdAt: -1,
+            })
             .populate("client")
             .populate("products.product");
+
          res.json(sales);
       } catch (error) {
          res.status(500).json({
@@ -123,20 +143,6 @@ export class SalesController {
             message: "Hubo un error al obtener la venta",
          });
       }
-   };
-
-   static getSalesByMonth = async (req: Request, res: Response) => {
-      const { month } = req.params; // formato "2025-08"
-      const start = new Date(`${month}-01T00:00:00`);
-      const end = new Date(`${month}-31T23:59:59`);
-
-      const sales = await Sales.find({
-         date: { $gte: start, $lte: end },
-      });
-
-      const totalIngresos = sales.reduce((acc, s) => acc + s.total, 0);
-
-      res.json({ sales, totalIngresos });
    };
 
    static updateSaleClient = async (req: Request, res: Response) => {
@@ -212,9 +218,11 @@ export class SalesController {
             }
             processedProducts.push({
                product: product._id,
-               unitPrice: product.cost + ( product.cost * product.revenuePercentage[sale.type]),
+               unitPrice:
+                  product.cost +
+                  product.cost * product.revenuePercentage[sale.type],
                quantity: item.quantity,
-               cost: product.cost
+               cost: product.cost,
             });
             product.stock -= item.quantity;
             if (product.stock < 0) {
@@ -278,9 +286,11 @@ export class SalesController {
                }
                processedProducts.push({
                   product: product._id,
-                  unitPrice: product.cost * (product.cost * product.revenuePercentage[type]),
+                  unitPrice:
+                     product.cost *
+                     (product.cost * product.revenuePercentage[type]),
                   quantity: item.quantity,
-                  cost: product.cost
+                  cost: product.cost,
                });
             }
             subtotal = processedProducts.reduce(

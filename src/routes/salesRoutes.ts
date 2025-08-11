@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import { SalesController } from "../controller/SalesController";
 import { handleInputErrors } from "../middleware/validation";
 
@@ -26,25 +26,19 @@ router.post(
    SalesController.createSale
 );
 
-router.get("/", SalesController.getAllSales);
+router.get(
+   "/",
+   query("month")
+      .optional()
+      .matches(/^\d{4}-\d{2}$/),
+   SalesController.getAllSales
+);
 
 router.get(
    "/:id",
    param("id").isMongoId().withMessage("El ID de la venta no es válido"),
    handleInputErrors,
    SalesController.getSaleById
-);
-
-router.post(
-   "/by-month",
-   body("month")
-      .isInt({ min: 1, max: 12 })
-      .withMessage("El mes debe estar entre 1 y 12"),
-   body("year")
-      .isInt({ min: 2025 }) // Podés ajustar el mínimo si querés
-      .withMessage("Debe ingresar un año válido"),
-   handleInputErrors,
-   SalesController.getSalesByMonth
 );
 
 router.patch(
@@ -82,10 +76,11 @@ router.patch(
    SalesController.updateSalePricings
 );
 
-router.delete("/:id",
+router.delete(
+   "/:id",
    param("id").isMongoId().withMessage("El ID de la venta no es válido"),
    handleInputErrors,
    SalesController.deleteSale
-)
+);
 
 export default router;
