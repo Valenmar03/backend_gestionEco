@@ -7,6 +7,7 @@ import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
 import clientRoutes from "./routes/clientRoutes"
 import salesRoutes from "./routes/salesRoutes"
+import expensesRoutes from "./routes/expenseRoutes"
 
 dotenv.config()
 
@@ -27,5 +28,7 @@ app.use('/api/auth', authRoutes)
 app.use("/api/client", clientRoutes)
     //Sales
 app.use("/api/sales", salesRoutes)
+    //Expenses
+app.use("/api/expenses", expensesRoutes)
 
 export default app
