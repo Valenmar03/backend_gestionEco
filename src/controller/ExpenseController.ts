@@ -42,7 +42,7 @@ export class ExpenseController {
             date: -1,
             createdAt: -1,
          });
-         res.json({ status: "success", data: expenses });
+         res.json(expenses);
       } catch (err) {
          res.status(500).json({
             status: "error",
