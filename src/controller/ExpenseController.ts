@@ -3,13 +3,29 @@ import { Request, Response } from "express";
 import Expense from "../models/Expense";
 
 export class ExpenseController {
-   static monthRange = (month: string) => {
-      // month = "YYYY-MM"
-      const [y, m] = month.split("-").map(Number);
-      const start = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0));
-      const end = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999)); // último día del mes
+   // Helper: devuelve el primer y último día del mes en "YYYY-MM-DD"
+   static monthRange(input: string) {
+      const now = new Date();
+      let year: number, month: number;
+
+      if (/^\d{4}-\d{2}$/.test(input)) {
+         const [y, m] = input.split("-").map(Number);
+         year = y;
+         month = m; // 1..12
+      } else {
+         year = now.getFullYear();
+         month = Number(input); // "8" -> 8
+      }
+
+      const mm = String(month).padStart(2, "0");
+      const start = `${year}-${mm}-01`;
+
+      // último día del mes usando UTC para evitar desfasajes
+      const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const end = `${year}-${mm}-${String(lastDay).padStart(2, "0")}`;
+
       return { start, end };
-   };
+   }
 
    static createExpense = async (req: Request, res: Response) => {
       try {
@@ -33,15 +49,19 @@ export class ExpenseController {
    static listExpenses = async (req: Request, res: Response) => {
       try {
          const { month } = req.query as { month?: string };
-         let filter: any = {};
+         const filter: Record<string, any> = {};
+
          if (month) {
             const { start, end } = ExpenseController.monthRange(month);
+            // date es STRING "YYYY-MM-DD" -> filtro lexicográfico
             filter.date = { $gte: start, $lte: end };
          }
+
          const expenses = await Expense.find(filter).sort({
-            date: -1,
-            createdAt: -1,
+            date: -1, // ordena por fecha (string YYYY-MM-DD funciona OK)
+            createdAt: -1, // desempate
          });
+
          res.json(expenses);
       } catch (err) {
          res.status(500).json({
