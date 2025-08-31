@@ -145,6 +145,50 @@ export class SalesController {
       }
    };
 
+   static getSalesByType = async (req: Request, res: Response) => {
+      try {
+         const { month } = req.query as { month?: string };
+         let filter: any = {};
+
+         if (month) {
+            const { start, end } = SalesController.monthRange(month);
+            filter.createdAt = { $gte: start, $lte: end };
+         }
+
+         const sales = await Sales.find(filter);
+
+         const result = {
+            wholesale: { qty: 0, total: 0 },
+            retail: { qty: 0, total: 0 },
+            mercadoLibre: { qty: 0, total: 0 },
+         };
+
+         for (const sale of sales) {
+            if (!sale.type) continue;
+
+            const saleTotal = sale.total || 0;
+
+            if (sale.type === "wholesale") {
+               result.wholesale.qty += 1;
+               result.wholesale.total += saleTotal;
+            } else if (sale.type === "retail") {
+               result.retail.qty += 1;
+               result.retail.total += saleTotal;
+            } else if (sale.type === "mercadoLibre") {
+               result.mercadoLibre.qty += 1;
+               result.mercadoLibre.total += saleTotal;
+            }
+         }
+
+         res.json(result);
+      } catch (error) {
+         res.status(500).json({
+            status: "error",
+            message: error.message,
+         });
+      }
+   };
+
    static updateSaleClient = async (req: Request, res: Response) => {
       try {
          const { id } = req.params;

@@ -35,6 +35,14 @@ router.get(
 );
 
 router.get(
+   "/type",
+   query("month")
+      .optional()
+      .matches(/^\d{4}-\d{2}$/),
+   SalesController.getSalesByType
+);
+
+router.get(
    "/:id",
    param("id").isMongoId().withMessage("El ID de la venta no es válido"),
    handleInputErrors,
