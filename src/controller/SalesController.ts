@@ -162,7 +162,7 @@ export class SalesController {
       }
    };
 
-   static getSalesByTypeGross = async (req: Request, res: Response) => {
+   static getSalesByType = async (req: Request, res: Response) => {
       try {
          const { month } = req.query as { month?: string };
          let filter: any = {};
@@ -175,25 +175,29 @@ export class SalesController {
          const sales = await Sales.find(filter);
 
          const result = {
-            wholesale: { qty: 0, total: 0 },
-            retail: { qty: 0, total: 0 },
-            mercadoLibre: { qty: 0, total: 0 },
+            wholesale: { qty: 0, total: { gross: 0, net: 0 } },
+            retail: { qty: 0, total: { gross: 0, net: 0 } },
+            mercadoLibre: { qty: 0, total: { gross: 0, net: 0 } },
          };
 
          for (const sale of sales) {
             if (!sale.type) continue;
 
-            const saleTotal = sale.total.gross || 0;
+            const saleTotalGross = sale.total.gross || 0;
+            const saleTotalNet = sale.total.net || 0;
 
             if (sale.type === "wholesale") {
                result.wholesale.qty += 1;
-               result.wholesale.total += saleTotal;
+               result.wholesale.total.gross += saleTotalGross;
+               result.wholesale.total.net += saleTotalNet;
             } else if (sale.type === "retail") {
                result.retail.qty += 1;
-               result.retail.total += saleTotal;
+               result.retail.total.gross += saleTotalGross;
+               result.retail.total.net += saleTotalNet;
             } else if (sale.type === "mercadoLibre") {
                result.mercadoLibre.qty += 1;
-               result.mercadoLibre.total += saleTotal;
+               result.mercadoLibre.total.gross += saleTotalGross;
+               result.mercadoLibre.total.net += saleTotalNet;
             }
          }
 
@@ -345,10 +349,13 @@ export class SalesController {
 
          const { iva, discount, type } = req.body;
 
-         const subtotal = type !== sale.type ? {
-            gross: 0,
-            net: 0,
-         } : sale.subtotal;
+         const subtotal =
+            type !== sale.type
+               ? {
+                    gross: 0,
+                    net: 0,
+                 }
+               : sale.subtotal;
 
          if (type !== sale.type) {
             const processedProducts = [];

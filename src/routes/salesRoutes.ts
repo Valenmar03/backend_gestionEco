@@ -39,7 +39,7 @@ router.get(
    query("month")
       .optional()
       .matches(/^\d{4}-\d{2}$/),
-   SalesController.getSalesByTypeGross
+   SalesController.getSalesByType
 );
 
 router.get(
