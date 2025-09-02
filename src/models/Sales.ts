@@ -29,8 +29,14 @@ export interface ISales extends Document {
    }[];
    iva: boolean;
    discount: number;
-   subtotal: number;
-   total: number;
+   subtotal: {
+      gross: number;
+      net: number;
+   }
+   total: {
+      gross: number;
+      net: number;
+   }
    type: TypeOfSale;
 }
 
@@ -97,16 +103,28 @@ const salesSchema: Schema = new Schema(
          },
       ],
       subtotal: {
-         type: Number,
-         required: true,
+         gross: {
+            type: Number,
+            required: true,
+         },
+         net: {
+            type: Number,
+            required: true,
+         } 
       },
       iva: {
          type: Boolean,
          default: false,
       },
       total: {
-         type: Number,
-         required: true,
+         gross: {
+            type: Number,
+            required: true,
+         },
+         net: {
+            type: Number,
+            required: true,
+         } 
       },
       discount: {
          type: Number,

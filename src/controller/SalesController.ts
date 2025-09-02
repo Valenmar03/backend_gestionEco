@@ -59,13 +59,30 @@ export class SalesController {
             await product.save();
          }
 
-         const subtotal = processedProducts.reduce(
+         const subtotal = {
+            gross: 0,
+            net: 0,
+         };
+
+         subtotal.gross = processedProducts.reduce(
             (acc, item) => acc + item.unitPrice * item.quantity,
             0
          );
-         const ivaAmount = iva ? subtotal * 0.21 : 0;
-         const discountAmount = (discount / 100) * subtotal;
-         const total = subtotal + ivaAmount - discountAmount;
+
+         subtotal.net = processedProducts.reduce(
+            (acc, item) => acc + (item.unitPrice - item.cost) * item.quantity,
+            0
+         );
+
+         const ivaAmount = iva ? subtotal.gross * 0.21 : 0;
+         const discountAmount = (discount / 100) * subtotal.gross;
+         const total = {
+            gross: 0,
+            net: 0,
+         };
+
+         total.gross = subtotal.gross + ivaAmount - discountAmount;
+         total.net = subtotal.net + ivaAmount - discountAmount;
 
          const formatedClient = {
             clientId: clientExists._id,
@@ -145,7 +162,7 @@ export class SalesController {
       }
    };
 
-   static getSalesByType = async (req: Request, res: Response) => {
+   static getSalesByTypeGross = async (req: Request, res: Response) => {
       try {
          const { month } = req.query as { month?: string };
          let filter: any = {};
@@ -166,7 +183,7 @@ export class SalesController {
          for (const sale of sales) {
             if (!sale.type) continue;
 
-            const saleTotal = sale.total || 0;
+            const saleTotal = sale.total.gross || 0;
 
             if (sale.type === "wholesale") {
                result.wholesale.qty += 1;
@@ -281,17 +298,30 @@ export class SalesController {
             await product.save();
          }
 
-         const subtotal = processedProducts.reduce(
+         const subtotal = {
+            gross: 0,
+            net: 0,
+         };
+
+         subtotal.gross = processedProducts.reduce(
             (acc, item) => acc + item.unitPrice * item.quantity,
             0
          );
-         const ivaAmount = sale.iva ? subtotal * 0.21 : 0;
-         const discountAmount = (sale.discount / 100) * subtotal;
-         const total = subtotal + ivaAmount - discountAmount;
 
-         sale.products = processedProducts;
-         sale.subtotal = subtotal;
-         sale.total = total;
+         subtotal.net = processedProducts.reduce(
+            (acc, item) => acc + (item.unitPrice - item.cost) * item.quantity,
+            0
+         );
+
+         const ivaAmount = sale.iva ? subtotal.gross * 0.21 : 0;
+         const discountAmount = (sale.discount / 100) * subtotal.gross;
+         const total = {
+            gross: 0,
+            net: 0,
+         };
+
+         total.gross = subtotal.gross + ivaAmount - discountAmount;
+         total.net = subtotal.net + ivaAmount - discountAmount;
 
          await sale.save();
          res.send("Venta actualizada correctamente");
@@ -315,7 +345,10 @@ export class SalesController {
 
          const { iva, discount, type } = req.body;
 
-         let subtotal = type !== sale.type ? 0 : sale.subtotal;
+         const subtotal = type !== sale.type ? {
+            gross: 0,
+            net: 0,
+         } : sale.subtotal;
 
          if (type !== sale.type) {
             const processedProducts = [];
@@ -337,19 +370,30 @@ export class SalesController {
                   cost: product.cost,
                });
             }
-            subtotal = processedProducts.reduce(
+
+            subtotal.gross = processedProducts.reduce(
                (acc, item) => acc + item.unitPrice * item.quantity,
+               0
+            );
+
+            subtotal.net = processedProducts.reduce(
+               (acc, item) =>
+                  acc + (item.unitPrice - item.cost) * item.quantity,
                0
             );
             sale.type = type;
             sale.products = processedProducts;
          }
-         const ivaAmount = iva ? subtotal * 0.21 : 0;
-         const discountAmount = (discount / 100) * subtotal;
-         const total = subtotal + ivaAmount - discountAmount;
 
-         sale.subtotal = subtotal;
-         sale.total = total;
+         const ivaAmount = iva ? subtotal.gross * 0.21 : 0;
+         const discountAmount = (discount / 100) * subtotal.gross;
+         const total = {
+            gross: 0,
+            net: 0,
+         };
+
+         total.gross = subtotal.gross + ivaAmount - discountAmount;
+         total.net = subtotal.net + ivaAmount - discountAmount;
          await sale.save();
 
          res.send("Venta actualizada correctamente");
