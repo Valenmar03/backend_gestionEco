@@ -59,7 +59,7 @@ export class ClientController {
    static updateClient = async (req: Request, res: Response) => {
       try {
          const { id } = req.params;
-         const client = await Client.findByIdAndUpdate(id, req.body);
+         const client = await Client.findByIdAndUpdate(id, req.body, { new: true });
 
          if (!client) {
             const error = new Error("Cliente no encontrado");
@@ -67,8 +67,6 @@ export class ClientController {
             return;
          }
 
-         
-         await client.save();
          res.send({status: 'success', message:"Cliente actualizado correctamente"});
       } catch (error) {
          res.status(500).json({
@@ -93,9 +91,9 @@ export class ClientController {
       } catch (error) {
          res.status(500).json({
             status: "error",
-            message: "Hubo un error al actualizar al cliente",
+            message: "Hubo un error al eliminar al cliente",
          });
       }
    };
-   
+
 }

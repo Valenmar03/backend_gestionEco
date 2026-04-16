@@ -3,8 +3,11 @@ import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { ExpenseController } from "../controller/ExpenseController";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
+
+router.use(authenticate);
 
 // Crear
 router.post(

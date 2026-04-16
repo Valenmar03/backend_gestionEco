@@ -20,7 +20,7 @@ export class ProductController {
       } catch (error) {
          res.status(500).json({
             status: "error",
-            message: error,
+            message: error.message,
          });
       }
    };
@@ -78,7 +78,6 @@ export class ProductController {
 
          await Product.updateOne({_id: id}, {$set: req.body})
 
-         await product.save();
          res.send({
             status: "success",
             message: "Producto actualizado correctamente",

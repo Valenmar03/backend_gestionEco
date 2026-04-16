@@ -371,8 +371,8 @@ export class SalesController {
                processedProducts.push({
                   product: product._id,
                   unitPrice:
-                     product.cost *
-                     (product.cost * product.revenuePercentage[type]),
+                     product.cost +
+                     product.cost * product.revenuePercentage[type],
                   quantity: item.quantity,
                   cost: product.cost,
                });
@@ -401,6 +401,11 @@ export class SalesController {
 
          total.gross = subtotal.gross + ivaAmount - discountAmount;
          total.net = subtotal.net + ivaAmount - discountAmount;
+
+         sale.subtotal = subtotal;
+         sale.total = total;
+         sale.iva = iva;
+         sale.discount = discount;
          await sale.save();
 
          res.send("Venta actualizada correctamente");
